@@ -2,12 +2,14 @@ package com.esgis2026.assigame.controller;
 
 import com.esgis2026.assigame.entity.TypeUtilisateur;
 import com.esgis2026.assigame.service.TypeUtilisateurService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/typeutilisateur")
+@PreAuthorize("hasRole('ADMIN')")
 public class TypeUtilisateurController {
     final TypeUtilisateurService typeUtilisateurService;
 

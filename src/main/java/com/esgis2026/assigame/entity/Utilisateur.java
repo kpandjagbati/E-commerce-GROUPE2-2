@@ -1,5 +1,6 @@
 package com.esgis2026.assigame.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class Utilisateur {
     @Column(nullable = false, length = 100)
     private String Login_utilisateur;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 100)
     private String Password_utilisateur;
 
