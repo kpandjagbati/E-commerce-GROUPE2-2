@@ -2,7 +2,9 @@ package com.esgis2026.assigame.controller;
 
 import com.esgis2026.assigame.entity.Produit;
 import com.esgis2026.assigame.service.ProduitService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -66,4 +68,23 @@ public class ProduitController {
     public Produit updateStatut(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return produitService.updateStatut(id, body.get("statut"));
     }
+
+    @GetMapping("/{id}/image")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEUR')")
+    public ResponseEntity<byte[]> getProduitImage(@PathVariable Long id) {
+        Produit produit = produitService.getProduitById(id);
+        if (produit.getImage() == null || produit.getImage().length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        if (produit.getImage_type() != null) {
+            mediaType = MediaType.parseMediaType(produit.getImage_type());
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, mediaType.toString())
+                .body(produit.getImage());
+    }
 }
+

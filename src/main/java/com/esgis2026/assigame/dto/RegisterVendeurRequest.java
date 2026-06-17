@@ -1,0 +1,18 @@
+package com.esgis2026.assigame.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class RegisterVendeurRequest {
+
+    private String nom;
+    private String prenom;
+    private String login;
+    private String email;
+    private String telephone;
+    private String password;
+    private String sexe;
+    private String residence;
+}

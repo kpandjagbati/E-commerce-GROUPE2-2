@@ -1,5 +1,7 @@
 package com.esgis2026.assigame.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,7 @@ public class Produit {
     @Column()
     private Double prix;
 
+    @JsonIgnore
     @Column(columnDefinition = "BYTEA")
     private byte[] image;
 
@@ -39,11 +42,13 @@ public class Produit {
     @Column(nullable = false)
     private String statut;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idcategorie_produit")
     private CategorieProduit categorie_produit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "Password_utilisateur"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
 

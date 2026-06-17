@@ -1,5 +1,6 @@
 package com.esgis2026.assigame.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -42,7 +43,8 @@ public class Utilisateur {
     @Column( unique = false, length = 200)
     private String residence_utilisateur;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_type_utilisateur")
     private TypeUtilisateur type_utilisateur;
 

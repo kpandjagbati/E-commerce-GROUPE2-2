@@ -1,7 +1,9 @@
 package com.esgis2026.assigame.controller;
 
+import com.esgis2026.assigame.dto.RegisterVendeurRequest;
 import com.esgis2026.assigame.entity.Utilisateur;
 import com.esgis2026.assigame.service.UtilisateurService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,12 @@ public class UtilisateurController {
         return utilisateurService.getAllUtilisateurs();
     }
 
+    @GetMapping("/vendeurs")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Utilisateur> getVendeurs() {
+        return utilisateurService.getVendeurs();
+    }
+
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('ADMIN', 'VENDEUR')")
     public Utilisateur getCurrentUtilisateur() {
@@ -33,6 +41,13 @@ public class UtilisateurController {
     @PreAuthorize("hasRole('ADMIN')")
     public Utilisateur createUtilisateur(@RequestBody Utilisateur utilisateur) {
         return utilisateurService.createUtilisateur(utilisateur);
+    }
+
+    @PostMapping("/vendeur")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Utilisateur createVendeur(@RequestBody RegisterVendeurRequest request) {
+        return utilisateurService.registerVendeur(request);
     }
 
     @DeleteMapping("/delete/{id}")
