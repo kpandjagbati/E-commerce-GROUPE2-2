@@ -34,6 +34,33 @@ public class ProduitController {
         return produitService.getMesProduits();
     }
 
+    @GetMapping("/catalogue")
+    public List<Produit> getCatalogueProduits() {
+        return produitService.getCatalogueProduits();
+    }
+
+    @GetMapping("/catalogue/{id}")
+    public Produit getCatalogueProduit(@PathVariable Long id) {
+        return produitService.getCatalogueProduitById(id);
+    }
+
+    @GetMapping("/catalogue/{id}/image")
+    public ResponseEntity<byte[]> getCatalogueProduitImage(@PathVariable Long id) {
+        Produit produit = produitService.getCatalogueProduitById(id);
+        if (produit.getImage() == null || produit.getImage().length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        if (produit.getImage_type() != null) {
+            mediaType = MediaType.parseMediaType(produit.getImage_type());
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, mediaType.toString())
+                .body(produit.getImage());
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'VENDEUR')")
     public Produit getProduitById(@PathVariable Long id) {

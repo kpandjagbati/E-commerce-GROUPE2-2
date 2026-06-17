@@ -46,12 +46,7 @@ public class ProduitService {
         produit.setImage(image.getBytes());
         produit.setDate_ajout(LocalDateTime.now());
         produit.setUtilisateur(currentUser);
-
-        if (SecurityUtils.isVendeur()) {
-            produit.setStatut(STATUT_EN_ATTENTE);
-        } else if (produit.getStatut() == null || produit.getStatut().isBlank()) {
-            produit.setStatut(STATUT_ACTIF);
-        }
+        produit.setStatut(STATUT_ACTIF);
 
         return produitRepository.save(produit);
     }
@@ -84,11 +79,18 @@ public class ProduitService {
 
         if (details.getStatut() != null) {
             applyStatutUpdate(produit, details.getStatut());
-        } else if (SecurityUtils.isVendeur()) {
-            produit.setStatut(STATUT_EN_ATTENTE);
         }
 
         return produitRepository.save(produit);
+    }
+
+    public List<Produit> getCatalogueProduits() {
+        return produitRepository.findByStatut(STATUT_ACTIF);
+    }
+
+    public Produit getCatalogueProduitById(Long id) {
+        return produitRepository.findCatalogueProduit(id, STATUT_ACTIF)
+                .orElseThrow(() -> new RuntimeException("produit not found with id " + id));
     }
 
     public Produit updateStatut(Long id, String statut) {

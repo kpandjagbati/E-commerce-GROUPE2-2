@@ -2,8 +2,10 @@ package com.esgis2026.assigame.config;
 
 import com.esgis2026.assigame.entity.TypeUtilisateur;
 import com.esgis2026.assigame.entity.Utilisateur;
+import com.esgis2026.assigame.repository.ProduitRepository;
 import com.esgis2026.assigame.repository.TypeUtilisateurRepository;
 import com.esgis2026.assigame.repository.UtilisateurRepository;
+import com.esgis2026.assigame.service.ProduitService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,15 +15,18 @@ public class DataInitializer implements CommandLineRunner {
 
     private final TypeUtilisateurRepository typeUtilisateurRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final ProduitRepository produitRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(
             TypeUtilisateurRepository typeUtilisateurRepository,
             UtilisateurRepository utilisateurRepository,
+            ProduitRepository produitRepository,
             PasswordEncoder passwordEncoder
     ) {
         this.typeUtilisateurRepository = typeUtilisateurRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.produitRepository = produitRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -57,6 +62,13 @@ public class DataInitializer implements CommandLineRunner {
             vendeur.setType_utilisateur(vendeurType);
             utilisateurRepository.save(vendeur);
         }
+
+        produitRepository.findAll().stream()
+                .filter(p -> ProduitService.STATUT_EN_ATTENTE.equals(p.getStatut()))
+                .forEach(p -> {
+                    p.setStatut(ProduitService.STATUT_ACTIF);
+                    produitRepository.save(p);
+                });
     }
 
     private TypeUtilisateur createTypeIfMissing(String libelle, String description) {
