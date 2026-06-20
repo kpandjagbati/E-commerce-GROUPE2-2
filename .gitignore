@@ -1,5 +1,7 @@
 HELP.md
 target/
+nul
+.m2-local/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
